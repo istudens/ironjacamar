@@ -299,6 +299,11 @@ public class SimpleResourceAdapterRepository implements ResourceAdapterRepositor
     */
    public synchronized Endpoint getEndpoint(String uniqueId) throws NotFoundException
    {
+      return getEndpoint(uniqueId, null);
+   }
+
+   public synchronized Endpoint getEndpoint(String uniqueId, String mdrIdentifier) throws NotFoundException
+   {
       if (uniqueId == null)
          throw new IllegalArgumentException("UniqueId is null");
 
@@ -313,7 +318,8 @@ public class SimpleResourceAdapterRepository implements ResourceAdapterRepositor
       if (ra.get() == null)
          throw new NotFoundException(bundle.keyNotRegistered(uniqueId));
 
-      String mdrIdentifier = getMDRIdentifier(ra.get());
+      if (mdrIdentifier == null)
+         mdrIdentifier = getMDRIdentifier(ra.get());
       boolean is16 = is16(mdrIdentifier);
       Set<String> beanValidationGroups = getBeanValidationGroups(mdrIdentifier);
       String productName = getProductName(mdrIdentifier);
@@ -323,10 +329,16 @@ public class SimpleResourceAdapterRepository implements ResourceAdapterRepositor
                               productName, productVersion, transactionIntegration);
    }
 
+   public synchronized List<org.jboss.jca.core.spi.rar.MessageListener> getMessageListeners(String uniqueId)
+      throws NotFoundException, InstantiationException, IllegalAccessException
+   {
+      return getMessageListeners(uniqueId, null);
+   }
+   
    /**
     * {@inheritDoc}
     */
-   public synchronized List<org.jboss.jca.core.spi.rar.MessageListener> getMessageListeners(String uniqueId)
+   public synchronized List<org.jboss.jca.core.spi.rar.MessageListener> getMessageListeners(String uniqueId, String raId)
       throws NotFoundException, InstantiationException, IllegalAccessException
    {
       if (uniqueId == null)
@@ -350,6 +362,22 @@ public class SimpleResourceAdapterRepository implements ResourceAdapterRepositor
       Connector md = null;
 
       Set<String> mdrKeys = mdr.getResourceAdapters();
+      if (raId != null && mdrKeys.contains(raId)) 
+      {
+         try 
+         {
+            Connector c = mdr.getResourceAdapter(raId);
+            if (c.getResourceadapter() != null && c.getResourceadapter() instanceof ResourceAdapter1516)
+            {
+                  md = c;
+            }
+         }
+         catch (Throwable t)
+         {
+            throw new NotFoundException(bundle.unableLookupResourceAdapterInMDR(uniqueId), t);
+         }
+      }
+            
       Iterator<String> mdrIt = mdrKeys.iterator();
 
       while (md == null && mdrIt.hasNext())

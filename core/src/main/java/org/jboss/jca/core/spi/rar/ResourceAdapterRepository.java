@@ -77,6 +77,7 @@ public interface ResourceAdapterRepository
     * @exception NotFoundException Thrown if the unique id isn't registered
     */
    public Endpoint getEndpoint(String uniqueId) throws NotFoundException;
+   public Endpoint getEndpoint(String uniqueId, String raName) throws NotFoundException;
 
    /**
     * Get a list of message listeners supported for a resource adapter
@@ -87,5 +88,7 @@ public interface ResourceAdapterRepository
     * @exception IllegalAccessException Thrown if object access is inaccessible
     */
    public List<MessageListener> getMessageListeners(String uniqueId) 
+      throws NotFoundException, InstantiationException, IllegalAccessException;
+   public List<MessageListener> getMessageListeners(String uniqueId, String raId) 
       throws NotFoundException, InstantiationException, IllegalAccessException;
 }
