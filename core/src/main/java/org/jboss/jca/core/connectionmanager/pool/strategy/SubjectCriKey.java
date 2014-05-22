@@ -63,7 +63,16 @@ class SubjectCriKey
     */
    SubjectCriKey(Subject subject, ConnectionRequestInfo cri, boolean separateNoTx)
    {
-      this.subject = (subject == null) ? NOSUBJECT : subject;
+      if (subject == null)
+      {
+         this.subject = NOSUBJECT;
+      }
+      else
+      {
+         // create a cloned subject for the key and thus make it immutable
+         this.subject = new Subject(subject.isReadOnly(), subject.getPrincipals(),
+               subject.getPublicCredentials(), subject.getPrivateCredentials());
+      }
       this.cri = (cri == null) ? NOCRI : cri;
       this.separateNoTx = separateNoTx;
    }
