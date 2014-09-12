@@ -776,20 +776,16 @@ public abstract class AbstractDsDeployer
       }
 
       Recovery recoveryMD = ds.getRecovery();
-      String defaultSecurityDomain = null;
-      String defaultUserName = null;
-      String defaultPassword = null;
+      String recoverSecurityDomain = null;
+      String recoverUser = null;
+      String recoverPassword = null;
 
       if (ds.getSecurity() != null)
       {
-         defaultSecurityDomain = ds.getSecurity().getSecurityDomain();
-         defaultUserName = ds.getSecurity().getUserName();
-         defaultPassword = ds.getSecurity().getPassword();
+         recoverSecurityDomain = ds.getSecurity().getSecurityDomain();
+         recoverUser = ds.getSecurity().getUserName();
+         recoverPassword = ds.getSecurity().getPassword();
       }
-
-      String recoverSecurityDomain = defaultSecurityDomain;
-      String recoverUser = defaultUserName;
-      String recoverPassword = defaultPassword;
 
       XAResourceRecovery recoveryImpl = null;
       boolean enableRecovery = false;
@@ -821,8 +817,7 @@ public abstract class AbstractDsDeployer
             log.debug("RecoverSecurityDomain=" + recoverSecurityDomain);
          }
 
-         if ((recoverUser != null && !recoverUser.trim().equals("") &&
-              recoverPassword != null && !recoverPassword.trim().equals("")) ||
+         if ((recoverUser != null && !recoverUser.trim().equals("")) ||
              (recoverSecurityDomain != null && !recoverSecurityDomain.trim().equals("")))
          {
             RecoveryPlugin plugin = null;

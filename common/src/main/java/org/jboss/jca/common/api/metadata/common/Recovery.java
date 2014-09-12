@@ -164,9 +164,11 @@ public class Recovery implements JCAMetadata, ValidatableMetadata
             sb.append(credential.getUserName());
             sb.append("</").append(Credential.Tag.USER_NAME).append(">");
 
-            sb.append("<").append(Credential.Tag.PASSWORD).append(">");
-            sb.append(credential.getPassword());
-            sb.append("</").append(Credential.Tag.PASSWORD).append(">");
+            if (credential.getPassword() != null) {
+               sb.append("<").append(Credential.Tag.PASSWORD).append(">");
+               sb.append(credential.getPassword());
+               sb.append("</").append(Credential.Tag.PASSWORD).append(">");
+            }
          }
          else
          {

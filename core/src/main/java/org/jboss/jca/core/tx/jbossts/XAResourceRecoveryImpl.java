@@ -264,7 +264,7 @@ public class XAResourceRecoveryImpl implements org.jboss.jca.core.spi.transactio
           */
          public Subject run()
          {
-            if (recoverUserName != null && recoverPassword != null)
+            if (recoverUserName != null)
             {
                log.debugf("Recovery user name=%s", recoverUserName);
 
@@ -276,7 +276,7 @@ public class XAResourceRecoveryImpl implements org.jboss.jca.core.spi.transactio
                subject.getPrincipals().add(p);
 
                // PrivateCredentials
-               PasswordCredential pc = new PasswordCredential(recoverUserName, recoverPassword.toCharArray());
+               PasswordCredential pc = new PasswordCredential(recoverUserName, (recoverPassword != null) ? recoverPassword.toCharArray() : new char[]{});
                pc.setManagedConnectionFactory(mcf);
                subject.getPrivateCredentials().add(pc);
 
